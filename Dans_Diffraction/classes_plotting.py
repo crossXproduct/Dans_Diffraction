@@ -278,7 +278,8 @@ class Plotting:
             z = [el[2][2] for el in ex]
             ax.plot3D(x, y, z, '-', lw=5)
 
-    def simulate_powder(self, energy_kev=None, peak_width=0.01, background=0, powder_average=True):
+    def simulate_powder(self, energy_kev=None, peak_width=0.01, background=0, powder_average=True, labels=None):
+        #'labels' options: 'ref','highest','all',None
         """
         Generates a powder pattern, plots in a new figure with labels
             see classes_scattering.generate_powder
@@ -376,16 +377,16 @@ class Plotting:
         plt.xlim([min_x, max_x])
         
         # Reflection labels
-        for n in range(len(ref_n)):
-            plt.text(mesh_x[ref_n[n]], 1.01 * mesh[ref_n[n]], ref_txt[n],
-                     fontname=fp.DEFAULT_FONT, fontsize=18, color='b',
-                     rotation='vertical', ha='center', va='bottom')
+        if labels!=None:
+            leng=len(ref_n)
+            if labels=='highest': leng=4
+            for n in range(leng):
+                plt.text(mesh_x[ref_n[n]], 1.01 * mesh[ref_n[n]], ref_txt[n], fontname=fp.DEFAULT_FONT, fontsize=18, color='b', rotation='vertical', ha='center', va='bottom')
         # Extinction labels
-        #ext_y = background + 0.01 * plt.ylim()[1]
-        #for n in range(len(ext_n)):
-        #    plt.text(mesh_x[ext_n[n]], ext_y, ext_txt[n],
-        #             fontname=fp.DEFAULT_FONT, fontsize=18, color='r',
-        #             rotation='vertical', ha='center', va='bottom')
+        if labels=='all':
+            ext_y = background + 0.01 * plt.ylim()[1]
+            for n in range(len(ext_n)):
+                plt.text(mesh_x[ext_n[n]], ext_y, ext_txt[n], fontname=fp.DEFAULT_FONT, fontsize=18, color='r', rotation='vertical', ha='center', va='bottom')
         
         # Plot labels
         ylab = u'Intensity [a. u.]'
